@@ -30,5 +30,21 @@ namespace LeaveManagementSystem.Models
                 .OrderBy(lr => lr.StartDate)
                 .ToList();
         }
+
+        public bool CancelLeaveRequest(int leaveRequestId, int employeeId)
+        {
+            var leaveRequest = _leaveRequests.FirstOrDefault(lr =>
+                lr.LeaveRequestId == leaveRequestId &&
+                lr.EmployeeId == employeeId);
+
+            if (leaveRequest == null || leaveRequest.Status != LeaveStatus.Pending)
+            {
+                return false; // Cannot cancel if not found or already processed
+            }
+
+            leaveRequest.Status = LeaveStatus.Cancelled;
+            return true;
+        }
+
     }
 }
