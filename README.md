@@ -18,7 +18,7 @@ A cloud-integrated leave management platform built with **C# 10** and **.NET 6**
 - GitHub for Collaboration
 
 ## Team Members & Tasks
-Member 1	? Done — Project initialized, models created, GitHub repo set up
+Member 1	? Done â€” Project initialized, models created, GitHub repo set up
 Member 2	Implement Leave Application logic (Apply functionality with validation)
 Member 3	Implement Leave Cancellation logic (Cancel pending leave with checks)
 Member 4	Add async file operations to save leave requests to JSON
@@ -36,4 +36,4 @@ Member 8	Write unit tests for business logic (Apply, Cancel, Approve, Reject) |
 - `Tests/` - NUnit test cases
 
 ##  Sprint 1 Goal
-A fully working console app with JSON persistence & Git-based collaboration.
+
