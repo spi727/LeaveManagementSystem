@@ -1,24 +1,23 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace LeaveManagementSystem.Models
 {
-    /// <summary>
-    /// Represents a leave request made by an employee.
-    /// </summary>
     public class LeaveRequest
     {
         public int LeaveRequestId { get; set; }
 
+        [Required]
         public int EmployeeId { get; set; }
 
+        [Required]
         public DateTime StartDate { get; set; }
 
+        [Required]
         public DateTime EndDate { get; set; }
 
+        [Required]
+        [StringLength(500)]
         public string Reason { get; set; }
 
         public LeaveStatus Status { get; set; } = LeaveStatus.Pending;
@@ -28,9 +27,6 @@ namespace LeaveManagementSystem.Models
         public int? ApprovedByManagerId { get; set; }
     }
 
-    /// <summary>
-    /// Enumeration of leave request status values.
-    /// </summary>
     public enum LeaveStatus
     {
         Pending,

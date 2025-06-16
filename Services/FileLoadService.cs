@@ -1,23 +1,39 @@
-﻿using System.Collections.Generic;
+﻿using LeaveManagementSystem.Models;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
-using LeaveManagementSystem.Models;
 
 namespace LeaveManagementSystem.Services
 {
-    public class FileLoadService
+    public class FileLoadService : IDisposable
     {
-        private readonly string filePath = "leave_records.json";
+        private readonly string _filePath = "leave_requests.json";
+        private bool _disposed = false;
 
-        public async Task<List<LeaveApplication>> LoadLeavesAsync()
+        public async Task<List<LeaveRequest>> LoadLeavesAsync()
         {
-            if (!File.Exists(filePath))
-                return new List<LeaveApplication>();
+            if (!File.Exists(_filePath))
+                return new List<LeaveRequest>();
 
-            using FileStream stream = File.OpenRead(filePath);
-            var data = await JsonSerializer.DeserializeAsync<List<LeaveApplication>>(stream);
-            return data ?? new List<LeaveApplication>();
+            try
+            {
+                await using FileStream stream = File.OpenRead(_filePath);
+                return await JsonSerializer.DeserializeAsync<List<LeaveRequest>>(stream) ?? new List<LeaveRequest>();
+            }
+            catch
+            {
+                return new List<LeaveRequest>();
+            }
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                _disposed = true;
+            }
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -1,75 +1,109 @@
-﻿namespace LeaveManagementSystem.Services
+﻿using LeaveManagementSystem.Models;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+namespace LeaveManagementSystem.Services
 {
-    using global::LeaveManagementSystem.Models;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text.Json;
-    using System.Threading.Tasks;
-
-    namespace LeaveManagementSystem.Services
+    public class ManagerService : IDisposable
     {
-        public class ManagerService
+        private readonly string _filePath = "leave_requests.json";
+        private bool _disposed = false;
+
+        public async Task<List<LeaveRequest>> GetPendingRequestsAsync(int managerId)
         {
-            private readonly string leaveFilePath = "leaveRequests.json";
+            if (!File.Exists(_filePath))
+                return new List<LeaveRequest>();
 
-            public async Task<List<LeaveRequest>> GetPendingRequestsAsync()
+            try
             {
-                if (!File.Exists(leaveFilePath))
-                    return new List<LeaveRequest>();
-
-                var json = await File.ReadAllTextAsync(leaveFilePath);
-                var allRequests = JsonSerializer.Deserialize<List<LeaveRequest>>(json) ?? new List<LeaveRequest>();
-
+                await using FileStream stream = File.OpenRead(_filePath);
+                var allRequests = await JsonSerializer.DeserializeAsync<List<LeaveRequest>>(stream) ?? new List<LeaveRequest>();
                 return allRequests.Where(r => r.Status == LeaveStatus.Pending).ToList();
             }
-
-            public async Task<bool> ApproveLeaveAsync(int requestId, int managerId)
+            catch
             {
-                var requests = await LoadLeaveRequestsAsync();
-
-                var request = requests.FirstOrDefault(r => r.LeaveRequestId == requestId);
-
-                if (request == null || request.Status != LeaveStatus.Pending)
-                    return false;
-
-                request.Status = LeaveStatus.Approved;
-                request.ApprovedByManagerId = managerId;
-
-                await SaveLeaveRequestsAsync(requests);
-                return true;
-            }
-
-            public async Task<bool> RejectLeaveAsync(int requestId, int managerId)
-            {
-                var requests = await LoadLeaveRequestsAsync();
-
-                var request = requests.FirstOrDefault(r => r.LeaveRequestId == requestId);
-
-                if (request == null || request.Status != LeaveStatus.Pending)
-                    return false;
-
-                request.Status = LeaveStatus.Rejected;
-                request.ApprovedByManagerId = managerId;
-
-                await SaveLeaveRequestsAsync(requests);
-                return true;
-            }
-
-            private async Task<List<LeaveRequest>> LoadLeaveRequestsAsync()
-            {
-                if (!File.Exists(leaveFilePath))
-                    return new List<LeaveRequest>();
-
-                var json = await File.ReadAllTextAsync(leaveFilePath);
-                return JsonSerializer.Deserialize<List<LeaveRequest>>(json) ?? new List<LeaveRequest>();
-            }
-
-            private async Task SaveLeaveRequestsAsync(List<LeaveRequest> requests)
-            {
-                var json = JsonSerializer.Serialize(requests, new JsonSerializerOptions { WriteIndented = true });
-                await File.WriteAllTextAsync(leaveFilePath, json);
+                return new List<LeaveRequest>();
             }
         }
-    }
 
+        public async Task<bool> ApproveLeaveAsync(int requestId, int managerId)
+        {
+            List<LeaveRequest> requests;
+
+            try
+            {
+                await using FileStream readStream = File.OpenRead(_filePath);
+                requests = await JsonSerializer.DeserializeAsync<List<LeaveRequest>>(readStream) ?? new List<LeaveRequest>();
+            }
+            catch
+            {
+                return false;
+            }
+
+            var request = requests.FirstOrDefault(r => r.LeaveRequestId == requestId);
+
+            if (request == null || request.Status != LeaveStatus.Pending)
+                return false;
+
+            request.Status = LeaveStatus.Approved;
+            request.ApprovedByManagerId = managerId;
+
+            try
+            {
+                await using FileStream writeStream = File.Create(_filePath);
+                await JsonSerializer.SerializeAsync(writeStream, requests, new JsonSerializerOptions { WriteIndented = true });
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> RejectLeaveAsync(int requestId, int managerId)
+        {
+            List<LeaveRequest> requests;
+
+            try
+            {
+                await using FileStream readStream = File.OpenRead(_filePath);
+                requests = await JsonSerializer.DeserializeAsync<List<LeaveRequest>>(readStream) ?? new List<LeaveRequest>();
+            }
+            catch
+            {
+                return false;
+            }
+
+            var request = requests.FirstOrDefault(r => r.LeaveRequestId == requestId);
+
+            if (request == null || request.Status != LeaveStatus.Pending)
+                return false;
+
+            request.Status = LeaveStatus.Rejected;
+            request.ApprovedByManagerId = managerId;
+
+            try
+            {
+                await using FileStream writeStream = File.Create(_filePath);
+                await JsonSerializer.SerializeAsync(writeStream, requests, new JsonSerializerOptions { WriteIndented = true });
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                _disposed = true;
+            }
+            GC.SuppressFinalize(this);
+        }
+    }
 }

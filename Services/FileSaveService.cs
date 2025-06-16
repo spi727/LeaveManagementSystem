@@ -1,41 +1,46 @@
-﻿using System.Collections.Generic;
+﻿using LeaveManagementSystem.Models;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
-using LeaveManagementSystem.Models;
 
 namespace LeaveManagementSystem.Services
 {
-    public class FileSaveService
+    public class FileSaveService : IDisposable
     {
-        private readonly string filePath = "leave_records.json";
+        private readonly string _filePath = "leave_requests.json";
+        private bool _disposed = false;
 
-        public async Task SaveLeaveAsync(LeaveApplication leave)
+        public async Task SaveLeaveAsync(LeaveRequest leave)
         {
-            List<LeaveApplication> existing = new();
+            List<LeaveRequest> existing = new();
 
-            if (File.Exists(filePath))
+            if (File.Exists(_filePath))
             {
-                using FileStream readStream = File.OpenRead(filePath);
-                existing = await JsonSerializer.DeserializeAsync<List<LeaveApplication>>(readStream) ?? new();
+                await using FileStream readStream = File.OpenRead(_filePath);
+                existing = await JsonSerializer.DeserializeAsync<List<LeaveRequest>>(readStream) ?? new();
             }
 
             existing.Add(leave);
 
-            using FileStream writeStream = File.Create(filePath);
+            await using FileStream writeStream = File.Create(_filePath);
             await JsonSerializer.SerializeAsync(writeStream, existing, new JsonSerializerOptions { WriteIndented = true });
         }
 
-        public async Task SaveAllLeavesAsync(List<LeaveApplication> allLeaves)
+        public async Task SaveAllLeavesAsync(List<LeaveRequest> allLeaves)
         {
-            string textFilePath = "leaves.txt";
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            await using FileStream writeStream = File.Create(_filePath);
+            await JsonSerializer.SerializeAsync(writeStream, allLeaves, options);
+        }
 
-            using StreamWriter writer = new StreamWriter(textFilePath, false); // false = overwrite
-            foreach (var leave in allLeaves)
+        public void Dispose()
+        {
+            if (!_disposed)
             {
-                string line = $"{leave.EmployeeId},{leave.StartDate},{leave.EndDate},{leave.Status}";
-                await writer.WriteLineAsync(line);
+                _disposed = true;
             }
+            GC.SuppressFinalize(this);
         }
     }
 }
