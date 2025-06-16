@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using LeaveManagementSystem.Models;
 using LeaveManagementSystem.Services;
 
 class Program
 {
-    static void Main()
+    static async Task Main()
     {
         FileLoadService loadService = new FileLoadService();
         FileSaveService saveService = new FileSaveService();
@@ -14,66 +15,73 @@ class Program
 
         Console.WriteLine("1. Apply Leave");
         Console.WriteLine("2. View All Leave Applications");
+        Console.WriteLine("3. Cancel Leave");
         Console.Write("Choose an option: ");
-        int choice = int.Parse(Console.ReadLine());
-
-        if (choice == 1)
+        if (!int.TryParse(Console.ReadLine(), out int choice))
         {
-            LeaveApplication newLeave = new LeaveApplication();
-
-            Console.Write("Enter Employee ID: ");
-            newLeave.EmployeeId = int.Parse(Console.ReadLine());
-
-            Console.Write("Enter Start Date (yyyy-mm-dd): ");
-            newLeave.StartDate = Console.ReadLine();
-
-            Console.Write("Enter End Date (yyyy-mm-dd): ");
-            newLeave.EndDate = Console.ReadLine();
-
-            newLeave.Status = "Pending";
-
-            saveService.SaveLeave(newLeave);
-            Console.WriteLine("Leave application saved successfully!");
+            Console.WriteLine("Invalid input.");
+            return;
         }
-        else if (choice == 2)
+
+        switch (choice)
         {
-            List<LeaveApplication> leaves = loadService.LoadLeaves();
+            case 1:
+                LeaveApplication newLeave = new LeaveApplication();
 
-            Console.WriteLine("\nLeave Applications:");
-            foreach (var leave in leaves)
-            {
-                Console.WriteLine($"Employee ID: {leave.EmployeeId}, Start: {leave.StartDate}, End: {leave.EndDate}, Status: {leave.Status}");
-            }
-        }
-        else if (choice == 3) // ✅ New Cancellation Logic
-        {
-            Console.Write("Enter Employee ID: ");
-            int employeeId = int.Parse(Console.ReadLine());
+                Console.Write("Enter Employee ID: ");
+                newLeave.EmployeeId = int.Parse(Console.ReadLine());
 
-            Console.Write("Enter Start Date of Leave to Cancel (yyyy-mm-dd): ");
-            string startDate = Console.ReadLine();
+                Console.Write("Enter Start Date (yyyy-mm-dd): ");
+                newLeave.StartDate = Console.ReadLine();
 
-            List<LeaveApplication> leaves = loadService.LoadLeaves();
+                Console.Write("Enter End Date (yyyy-mm-dd): ");
+                newLeave.EndDate = Console.ReadLine();
 
-            var leaveToCancel = leaves.Find(l =>
-                l.EmployeeId == employeeId &&
-                l.StartDate == startDate &&
-                l.Status == "Pending");
+                newLeave.Status = "Pending";
 
-            if (leaveToCancel != null)
-            {
-                leaveToCancel.Status = "Cancelled";
-                saveService.SaveAllLeaves(leaves); // Overwrite with updated list
-                Console.WriteLine("Leave application cancelled successfully.");
-            }
-            else
-            {
-                Console.WriteLine("Leave not found or cannot be cancelled.");
-            }
-        }
-        else
-        {
-            Console.WriteLine("Invalid choice.");
+                await saveService.SaveLeaveAsync(newLeave);
+                Console.WriteLine("Leave application saved successfully!");
+                break;
+
+            case 2:
+                List<LeaveApplication> leaves = await loadService.LoadLeavesAsync();
+
+                Console.WriteLine("\nLeave Applications:");
+                foreach (var leave in leaves)
+                {
+                    Console.WriteLine($"Employee ID: {leave.EmployeeId}, Start: {leave.StartDate}, End: {leave.EndDate}, Status: {leave.Status}");
+                }
+                break;
+
+            case 3:
+                Console.Write("Enter Employee ID: ");
+                int employeeId = int.Parse(Console.ReadLine());
+
+                Console.Write("Enter Start Date of Leave to Cancel (yyyy-mm-dd): ");
+                string startDate = Console.ReadLine();
+
+                List<LeaveApplication> allLeaves = await loadService.LoadLeavesAsync();
+
+                var leaveToCancel = allLeaves.Find(l =>
+                    l.EmployeeId == employeeId &&
+                    l.StartDate == startDate &&
+                    l.Status == "Pending");
+
+                if (leaveToCancel != null)
+                {
+                    leaveToCancel.Status = "Cancelled";
+                    await saveService.SaveAllLeavesAsync(allLeaves); // async overwrite
+                    Console.WriteLine("Leave application cancelled successfully.");
+                }
+                else
+                {
+                    Console.WriteLine("Leave not found or cannot be cancelled.");
+                }
+                break;
+
+            default:
+                Console.WriteLine("Invalid choice.");
+                break;
         }
     }
 }
