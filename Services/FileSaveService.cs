@@ -14,17 +14,17 @@ namespace LeaveManagementSystem.Services
         {
             List<LeaveApplication> existing = new();
 
-            // Load existing data if file exists
+            
             if (File.Exists(filePath))
             {
                 string json = File.ReadAllText(filePath);
                 existing = JsonSerializer.Deserialize<List<LeaveApplication>>(json) ?? new();
             }
 
-            // Add new leave
+            
             existing.Add(leave);
 
-            // Save to file
+           
             string updatedJson = JsonSerializer.Serialize(existing, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(filePath, updatedJson);
         }
