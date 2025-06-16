@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
 using LeaveManagementSystem.Models;
 
 namespace LeaveManagementSystem.Services
@@ -10,38 +10,32 @@ namespace LeaveManagementSystem.Services
     {
         private readonly string filePath = "leave_records.json";
 
-        public void SaveLeave(LeaveApplication leave)
+        public async Task SaveLeaveAsync(LeaveApplication leave)
         {
             List<LeaveApplication> existing = new();
 
-            
             if (File.Exists(filePath))
             {
-                string json = File.ReadAllText(filePath);
-                existing = JsonSerializer.Deserialize<List<LeaveApplication>>(json) ?? new();
+                using FileStream readStream = File.OpenRead(filePath);
+                existing = await JsonSerializer.DeserializeAsync<List<LeaveApplication>>(readStream) ?? new();
             }
 
-            
             existing.Add(leave);
 
-           
-            string updatedJson = JsonSerializer.Serialize(existing, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(filePath, updatedJson);
+            using FileStream writeStream = File.Create(filePath);
+            await JsonSerializer.SerializeAsync(writeStream, existing, new JsonSerializerOptions { WriteIndented = true });
         }
 
-        public void SaveAllLeaves(List<LeaveApplication> allLeaves)
+        public async Task SaveAllLeavesAsync(List<LeaveApplication> allLeaves)
         {
-            // You can use your existing logic but overwrite all leaves.
-            string filePath = "leaves.txt"; // or wherever you store leaves
-            using (StreamWriter writer = new StreamWriter(filePath, false)) // false = overwrite
+            string textFilePath = "leaves.txt";
+
+            using StreamWriter writer = new StreamWriter(textFilePath, false); // false = overwrite
+            foreach (var leave in allLeaves)
             {
-                foreach (var leave in allLeaves)
-                {
-                    string line = $"{leave.EmployeeId},{leave.StartDate},{leave.EndDate},{leave.Status}";
-                    writer.WriteLine(line);
-                }
+                string line = $"{leave.EmployeeId},{leave.StartDate},{leave.EndDate},{leave.Status}";
+                await writer.WriteLineAsync(line);
             }
         }
-
     }
 }
