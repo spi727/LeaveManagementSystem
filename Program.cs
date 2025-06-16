@@ -45,6 +45,32 @@ class Program
                 Console.WriteLine($"Employee ID: {leave.EmployeeId}, Start: {leave.StartDate}, End: {leave.EndDate}, Status: {leave.Status}");
             }
         }
+        else if (choice == 3) // ✅ New Cancellation Logic
+        {
+            Console.Write("Enter Employee ID: ");
+            int employeeId = int.Parse(Console.ReadLine());
+
+            Console.Write("Enter Start Date of Leave to Cancel (yyyy-mm-dd): ");
+            string startDate = Console.ReadLine();
+
+            List<LeaveApplication> leaves = loadService.LoadLeaves();
+
+            var leaveToCancel = leaves.Find(l =>
+                l.EmployeeId == employeeId &&
+                l.StartDate == startDate &&
+                l.Status == "Pending");
+
+            if (leaveToCancel != null)
+            {
+                leaveToCancel.Status = "Cancelled";
+                saveService.SaveAllLeaves(leaves); // Overwrite with updated list
+                Console.WriteLine("Leave application cancelled successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Leave not found or cannot be cancelled.");
+            }
+        }
         else
         {
             Console.WriteLine("Invalid choice.");
