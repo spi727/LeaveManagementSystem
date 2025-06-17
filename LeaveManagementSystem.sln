@@ -5,7 +5,7 @@ VisualStudioVersion = 17.14.36202.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeaveManagementSystem", "LeaveManagementSystem.csproj", "{4D98B1E4-D060-47FF-996B-90BCFE5A7B78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeaveManagementSystemTest", "..\LeaveManagementSystemTest\LeaveManagementSystemTest.csproj", "{4B3AD534-9922-4538-B02C-3A90E72EA2E3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeaveManagemetSystemTest", "..\LeaveManagemetSystemTest\LeaveManagemetSystemTest.csproj", "{5C4CC288-A2CE-4ED2-A955-EFBC72711678}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{4D98B1E4-D060-47FF-996B-90BCFE5A7B78}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D98B1E4-D060-47FF-996B-90BCFE5A7B78}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D98B1E4-D060-47FF-996B-90BCFE5A7B78}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4B3AD534-9922-4538-B02C-3A90E72EA2E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4B3AD534-9922-4538-B02C-3A90E72EA2E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4B3AD534-9922-4538-B02C-3A90E72EA2E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4B3AD534-9922-4538-B02C-3A90E72EA2E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C4CC288-A2CE-4ED2-A955-EFBC72711678}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C4CC288-A2CE-4ED2-A955-EFBC72711678}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C4CC288-A2CE-4ED2-A955-EFBC72711678}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C4CC288-A2CE-4ED2-A955-EFBC72711678}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
