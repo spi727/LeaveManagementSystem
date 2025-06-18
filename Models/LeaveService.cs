@@ -151,6 +151,14 @@ namespace LeaveManagementSystem.Models
             }
         }
         #endregion
+        public void ReloadFromFile()
+        {
+            if (!File.Exists(_filePath)) return;
+
+            var json = File.ReadAllText(_filePath);
+            _leaveRequests = JsonSerializer.Deserialize<List<LeaveRequest>>(json) ?? new List<LeaveRequest>();
+        }
+
         public void Dispose()
         {
             if (!_disposed)

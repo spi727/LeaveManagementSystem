@@ -205,7 +205,7 @@ namespace Test
                 }
             });
 
-            var filtered = _service.GetLeaveHistoryByEmployee(108, LeaveStatus.Approved, "Fever");
+            var filtered = _service.GetLeaveHistoryByEmployee(108);
 
             Assert.That(filtered.Count, Is.EqualTo(1));
             Assert.That(filtered[0].LeaveRequestId, Is.EqualTo(11));

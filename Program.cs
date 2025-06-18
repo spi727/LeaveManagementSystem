@@ -58,7 +58,7 @@ namespace LeaveManagementSystem
                             Console.Write("Enter Manager ID for approval: ");
                             newRequest.ApprovedByManagerId = int.Parse(Console.ReadLine());
 
-                            leaveService.ApplyLeave(newRequest);
+                            //leaveService.ApplyLeave(newRequest);
                             await fileSaveService.SaveLeaveAsync(newRequest);
                             Console.WriteLine("Leave request submitted successfully!");
                             break;
@@ -74,6 +74,9 @@ namespace LeaveManagementSystem
 
                             Console.Write("Enter Employee ID: ");
                             int empId = int.Parse(Console.ReadLine());
+
+                            leaveService.ReloadFromFile();
+
                             var history = leaveService.GetLeaveHistoryByEmployee(empId);
                             Console.Write("Filter by Status (Approved, Cancelled, Pending, Rejected)? Leave blank to skip: ");
                             var statusInput = Console.ReadLine();
