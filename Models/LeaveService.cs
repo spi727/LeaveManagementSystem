@@ -47,7 +47,7 @@ namespace LeaveManagementSystem.Models
                 .OrderBy(lr => lr.StartDate)
                 .ToList();
         }
-        #endregion
+      
 
         public bool CancelLeaveRequest(int leaveRequestId, int employeeId)
         {
@@ -68,6 +68,10 @@ namespace LeaveManagementSystem.Models
 
         public void ApplyLeave(LeaveRequest request)
         {
+            if (request.StartDate.Date < DateTime.Today || request.EndDate.Date < DateTime.Today)
+            {
+                throw new ArgumentException("Leave dates cannot be in the past.");
+            }
             bool isOverlap = _leaveRequests.Any(lr =>
                 lr.EmployeeId == request.EmployeeId &&
                 lr.Status != LeaveStatus.Cancelled &&
