@@ -24,6 +24,8 @@ Member 3	Add async file operations to store leave requests and user data in a pe
 Member 4	Develop manager actions logic to approve/reject leave requests, with validations.=> [Praveen Hatti]
 Member 5	Use LINQ to generate leave history for an employee and view pending approvals by the manager.=>[Pritish Priyadasan]                               
 Member 6	Write unit tests for all business logic scenarios (e.g., apply leave, cancel, reject, overlapping dates).=> [Pravardhan Pandana]
+Member 7    Use LINQ to filter leave history for an employee based on cancel, approved and leave reason.[Praneetha]
+Member 8    Write Nunit test for all business logic scenarios[Rishitha]
                
 
 ##  Structure

@@ -17,7 +17,7 @@ namespace LeaveManagementSystem.Models
         {
             _leaveRequests = LoadLeaveRequests().GetAwaiter().GetResult();
         }
-
+        #region member5
         public List<LeaveRequest> GetLeaveHistoryByEmployee(int employeeId)
         {
             return _leaveRequests
@@ -33,7 +33,9 @@ namespace LeaveManagementSystem.Models
                 .OrderBy(lr => lr.StartDate)
                 .ToList();
         }
+        #endregion
 
+        #region Member2
         public bool CancelLeaveRequest(int leaveRequestId, int employeeId)
         {
             var leaveRequest = _leaveRequests.FirstOrDefault(lr =>
@@ -49,6 +51,7 @@ namespace LeaveManagementSystem.Models
             SaveChanges();
             return true;
         }
+        #endregion
 
         public void ApplyLeave(LeaveRequest request)
         {
