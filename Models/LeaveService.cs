@@ -25,6 +25,20 @@ namespace LeaveManagementSystem.Models
                 .OrderByDescending(lr => lr.StartDate)
                 .ToList();
         }
+        // ✅ New: Filter by Status and Reason
+        #region member 7
+        public List<LeaveRequest> FilterLeaveHistory(int employeeId, List<LeaveStatus> statuses, string reason)
+        {
+            return _leaveRequests
+                .Where(lr =>
+                    lr.EmployeeId == employeeId &&
+                    statuses.Contains(lr.Status) &&
+                    lr.Reason.Contains(reason, StringComparison.OrdinalIgnoreCase))
+                .OrderByDescending(lr => lr.StartDate)
+                .ToList();
+        }
+        #endregion
+
 
         public List<LeaveRequest> GetPendingApprovals(int managerId)
         {
@@ -33,6 +47,7 @@ namespace LeaveManagementSystem.Models
                 .OrderBy(lr => lr.StartDate)
                 .ToList();
         }
+
 
         public bool CancelLeaveRequest(int leaveRequestId, int employeeId)
         {
