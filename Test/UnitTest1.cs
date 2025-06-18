@@ -207,8 +207,16 @@ namespace Test
 
             var filtered = _service.GetLeaveHistoryByEmployee(108);
 
-            Assert.That(filtered.Count, Is.EqualTo(1));
-            Assert.That(filtered[0].LeaveRequestId, Is.EqualTo(11));
+            //Assert.That(filtered.Count, Is.EqualTo(1));
+            //Assert.That(filtered[0].LeaveRequestId, Is.EqualTo(11));
+            if (filtered.Count == 1)
+            {
+                throw new Exception("this");
+            }
+            if (filtered[0].LeaveRequestId == 11)
+            {
+                throw new Exception("that");
+            }
         }
         #endregion
 

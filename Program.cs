@@ -58,8 +58,8 @@ namespace LeaveManagementSystem
                             Console.Write("Enter Manager ID for approval: ");
                             newRequest.ApprovedByManagerId = int.Parse(Console.ReadLine());
 
-                            //leaveService.ApplyLeave(newRequest);
-                            await fileSaveService.SaveLeaveAsync(newRequest);
+                            leaveService.ApplyLeave(newRequest);
+                           // await fileSaveService.SaveLeaveAsync(newRequest);
                             Console.WriteLine("Leave request submitted successfully!");
                             break;
                         #endregion
@@ -111,6 +111,13 @@ namespace LeaveManagementSystem
                             Console.Write("Enter Employee ID: ");
                             int cancelEmpId = int.Parse(Console.ReadLine());
 
+                            Console.WriteLine("Here are your leaves :");
+                            leaveService.ReloadFromFile();
+                            var leaves = leaveService.GetLeaveHistoryByEmployee(cancelEmpId);
+                            foreach (var request in leaves)
+                            {
+                                Console.WriteLine($"ID-{request.LeaveRequestId}  {request.StartDate:d} to {request.EndDate:d} - {request.Status}");
+                            }
                             Console.Write("Enter Leave Request ID to cancel: ");
                             int leaveId = int.Parse(Console.ReadLine());
 

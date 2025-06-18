@@ -25,10 +25,4 @@
 	  </Compile>
 	</ItemGroup>
 
-	<ItemGroup>
-		<None Update="leave_records.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-	</ItemGroup>
-
 </Project>
