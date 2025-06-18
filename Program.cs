@@ -59,13 +59,10 @@ namespace LeaveManagementSystem
                             Console.WriteLine("Leave request submitted successfully!");
                             break;
 
+                        #region member 7
                         case 2: // View Leave History
-                            #region member 7
-
                             Console.Write("Enter Employee ID: ");
                             int empId = int.Parse(Console.ReadLine());
-
-                            var history = leaveService.GetLeaveHistoryByEmployee(empId);
                             Console.Write("Filter by Status (Approved, Cancelled, Pending, Rejected)? Leave blank to skip: ");
                             var statusInput = Console.ReadLine();
 

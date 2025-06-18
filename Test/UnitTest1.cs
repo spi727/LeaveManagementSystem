@@ -176,6 +176,43 @@ namespace Test
                 throw new Exception("Expected the most recent leave to be first in the list.");
         }
 
+        #region memeber 7
+        [Test]
+        public void GetLeaveHistoryByEmployee_Should_FilterByStatusAndReason()
+        {
+            _testRequests.AddRange(new[]
+            {
+                new LeaveRequest
+                {
+                    LeaveRequestId = 9,
+                    EmployeeId = 108,
+                    Reason = "Fever",
+                    Status = LeaveStatus.Cancelled
+                },
+                new LeaveRequest
+                {
+                    LeaveRequestId = 10,
+                    EmployeeId = 108,
+                    Reason = "Family Function",
+                    Status = LeaveStatus.Approved
+                },
+                new LeaveRequest
+                {
+                    LeaveRequestId = 11,
+                    EmployeeId = 108,
+                    Reason = "Fever",
+                    Status = LeaveStatus.Approved
+                }
+            });
+
+            var filtered = _service.GetLeaveHistoryByEmployee(108, LeaveStatus.Approved, "Fever");
+
+            Assert.That(filtered.Count, Is.EqualTo(1));
+            Assert.That(filtered[0].LeaveRequestId, Is.EqualTo(11));
+        }
+        #endregion
+
+
         [Test]
         public void GetPendingApprovals_Should_ReturnCorrectList()
         {
