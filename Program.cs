@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 using LeaveManagementSystem.Models;
 using LeaveManagementSystem.Services;
 
+//Member3 has implemeted async and await
+
+
 namespace LeaveManagementSystem
 {
     class Program
@@ -36,6 +39,7 @@ namespace LeaveManagementSystem
                 {
                     switch (choice)
                     {
+                        #region Member2
                         case 1: // Apply Leave
                             var newRequest = new LeaveRequest();
 
@@ -58,9 +62,12 @@ namespace LeaveManagementSystem
                             await fileSaveService.SaveLeaveAsync(newRequest);
                             Console.WriteLine("Leave request submitted successfully!");
                             break;
+                        #endregion
+
+                        #region Member5 & Member7
 
                         case 2: // View Leave History
-                            #region member 7
+                            
 
                             Console.Write("Enter Employee ID: ");
                             int empId = int.Parse(Console.ReadLine());
@@ -94,6 +101,7 @@ namespace LeaveManagementSystem
                             break;
                         #endregion
 
+                        #region Member2
                         case 3: // Cancel Leave
                             Console.Write("Enter Employee ID: ");
                             int cancelEmpId = int.Parse(Console.ReadLine());
@@ -111,7 +119,9 @@ namespace LeaveManagementSystem
                                 Console.WriteLine("Unable to cancel leave request. It may already be processed.");
                             }
                             break;
+                        #endregion
 
+                        #region Member4
                         case 4: // Manager Approvals
                             Console.Write("Enter Manager ID: ");
                             int managerId = int.Parse(Console.ReadLine());
@@ -147,6 +157,9 @@ namespace LeaveManagementSystem
                                 Console.WriteLine(success ? "Leave rejected." : "Rejection failed.");
                             }
                             break;
+                        #endregion
+
+
 
                         case 5: // Exit
                             return;

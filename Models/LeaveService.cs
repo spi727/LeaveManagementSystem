@@ -9,7 +9,9 @@ namespace LeaveManagementSystem.Models
 {
     public class LeaveService : IDisposable
     {
+        #region Member3
         private List<LeaveRequest> _leaveRequests;
+      
         private readonly string _filePath = "leave_requests.json";
         private bool _disposed = false;
 
@@ -17,7 +19,8 @@ namespace LeaveManagementSystem.Models
         {
             _leaveRequests = LoadLeaveRequests().GetAwaiter().GetResult();
         }
-        #region member 5
+        #endregion
+        #region Member5
         public List<LeaveRequest> GetLeaveHistoryByEmployee(int employeeId)
         {
             return _leaveRequests
@@ -26,7 +29,8 @@ namespace LeaveManagementSystem.Models
                 .ToList();
         }
         //  Filter by Status and Reason
-        #region member 7
+
+      
         public List<LeaveRequest> FilterLeaveHistory(int employeeId, List<LeaveStatus> statuses, string reason)
         {
             return _leaveRequests
@@ -37,7 +41,7 @@ namespace LeaveManagementSystem.Models
                 .OrderByDescending(lr => lr.StartDate)
                 .ToList();
         }
-        #endregion
+
 
 
         public List<LeaveRequest> GetPendingApprovals(int managerId)
@@ -47,8 +51,8 @@ namespace LeaveManagementSystem.Models
                 .OrderBy(lr => lr.StartDate)
                 .ToList();
         }
-      
-
+        #endregion
+        #region Member2
         public bool CancelLeaveRequest(int leaveRequestId, int employeeId)
         {
             var leaveRequest = _leaveRequests.FirstOrDefault(lr =>
@@ -65,7 +69,7 @@ namespace LeaveManagementSystem.Models
             return true;
         }
         #endregion
-
+        #region Member2
         public void ApplyLeave(LeaveRequest request)
         {
             if (request.StartDate.Date < DateTime.Today || request.EndDate.Date < DateTime.Today)
@@ -87,7 +91,8 @@ namespace LeaveManagementSystem.Models
             _leaveRequests.Add(request);
             SaveChanges();
         }
-
+        #endregion
+        #region Member7
         public bool ApproveRequest(int leaveRequestId, int managerId)
         {
             var leaveRequest = _leaveRequests.FirstOrDefault(lr =>
@@ -115,7 +120,8 @@ namespace LeaveManagementSystem.Models
             SaveChanges();
             return true;
         }
-
+        #endregion
+        #region Member3
         private async Task<List<LeaveRequest>> LoadLeaveRequests()
         {
             if (!File.Exists(_filePath))
@@ -131,7 +137,6 @@ namespace LeaveManagementSystem.Models
                 return new List<LeaveRequest>();
             }
         }
-
         private void SaveChanges()
         {
             try
@@ -145,7 +150,7 @@ namespace LeaveManagementSystem.Models
                 // Log error in real application
             }
         }
-
+        #endregion
         public void Dispose()
         {
             if (!_disposed)

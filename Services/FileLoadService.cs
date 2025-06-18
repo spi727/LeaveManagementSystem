@@ -5,12 +5,12 @@ using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace LeaveManagementSystem.Services
-{
+#region Member3
     public class FileLoadService : IDisposable
     {
         private readonly string _filePath = "leave_requests.json";
         private bool _disposed = false;
-
+        
         public async Task<List<LeaveRequest>> LoadLeavesAsync()
         {
             if (!File.Exists(_filePath))
@@ -26,9 +26,10 @@ namespace LeaveManagementSystem.Services
                 return new List<LeaveRequest>();
             }
         }
-        #region member 7
-        // Filter leaves by employee, status (Approved/Cancelled), and reason
-        public async Task<List<LeaveRequest>> GetFilteredLeavesAsync(int employeeId, string reason)
+    #endregion
+    #region member 7
+    // Filter leaves by employee, status (Approved/Cancelled), and reason
+    public async Task<List<LeaveRequest>> GetFilteredLeavesAsync(int employeeId, string reason)
         {
             var leaves = await LoadLeavesAsync();
 
