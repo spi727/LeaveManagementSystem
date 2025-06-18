@@ -4,7 +4,7 @@ using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace LeaveManagementSystem.Services
+namespace LeaveManagementSystem.Services { 
 #region Member3
     public class FileLoadService : IDisposable
     {
