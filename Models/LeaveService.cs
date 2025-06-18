@@ -17,7 +17,7 @@ namespace LeaveManagementSystem.Models
         {
             _leaveRequests = LoadLeaveRequests().GetAwaiter().GetResult();
         }
-        #region member5
+        #region member 5
         public List<LeaveRequest> GetLeaveHistoryByEmployee(int employeeId)
         {
             return _leaveRequests
@@ -25,7 +25,7 @@ namespace LeaveManagementSystem.Models
                 .OrderByDescending(lr => lr.StartDate)
                 .ToList();
         }
-        // ✅ New: Filter by Status and Reason
+        //  Filter by Status and Reason
         #region member 7
         public List<LeaveRequest> FilterLeaveHistory(int employeeId, List<LeaveStatus> statuses, string reason)
         {

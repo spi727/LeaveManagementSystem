@@ -60,16 +60,39 @@ namespace LeaveManagementSystem
                             break;
 
                         case 2: // View Leave History
+                            #region member 7
+
                             Console.Write("Enter Employee ID: ");
                             int empId = int.Parse(Console.ReadLine());
 
                             var history = leaveService.GetLeaveHistoryByEmployee(empId);
-                            Console.WriteLine("\nYour Leave History:");
+                            Console.Write("Filter by Status (Approved, Cancelled, Pending, Rejected)? Leave blank to skip: ");
+                            var statusInput = Console.ReadLine();
+
+                            Console.Write("Filter by Reason keyword? Leave blank to skip: ");
+                            var reasonInput = Console.ReadLine();
+
+                            var filtered = history.AsEnumerable();
+
+                            if (!string.IsNullOrWhiteSpace(statusInput) &&
+                                Enum.TryParse(typeof(LeaveStatus), statusInput, true, out var statusEnum))
+                            {
+                                var parsedStatus = (LeaveStatus)statusEnum;
+                                filtered = filtered.Where(l => l.Status == parsedStatus);
+                            }
+
+                            if (!string.IsNullOrWhiteSpace(reasonInput))
+                            {
+                                filtered = filtered.Where(l => l.Reason.Contains(reasonInput, StringComparison.OrdinalIgnoreCase));
+                            }
+
+                            Console.WriteLine("\nFiltered Leave History:");
                             foreach (var request in history)
                             {
                                 Console.WriteLine($"{request.StartDate:d} to {request.EndDate:d} - {request.Status}");
                             }
                             break;
+                        #endregion
 
                         case 3: // Cancel Leave
                             Console.Write("Enter Employee ID: ");

@@ -26,6 +26,22 @@ namespace LeaveManagementSystem.Services
                 return new List<LeaveRequest>();
             }
         }
+        #region member 7
+        // Filter leaves by employee, status (Approved/Cancelled), and reason
+        public async Task<List<LeaveRequest>> GetFilteredLeavesAsync(int employeeId, string reason)
+        {
+            var leaves = await LoadLeavesAsync();
+
+            var filtered = leaves
+                .Where(lr => lr.EmployeeId == employeeId &&
+                             (lr.Status == LeaveStatus.Approved || lr.Status == LeaveStatus.Cancelled) &&
+                             lr.Reason.Contains(reason, StringComparison.OrdinalIgnoreCase))
+                .OrderByDescending(lr => lr.StartDate)
+                .ToList();
+
+            return filtered;
+        }
+        #endregion
 
         public void Dispose()
         {
