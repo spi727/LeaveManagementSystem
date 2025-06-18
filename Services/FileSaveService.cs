@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace LeaveManagementSystem.Services
 {
+    #region Member3
     public class FileSaveService : IDisposable
     {
         private readonly string _filePath = "leave_requests.json";
@@ -26,14 +27,16 @@ namespace LeaveManagementSystem.Services
             await using FileStream writeStream = File.Create(_filePath);
             await JsonSerializer.SerializeAsync(writeStream, existing, new JsonSerializerOptions { WriteIndented = true });
         }
-
+        #region Member2
         public async Task SaveAllLeavesAsync(List<LeaveRequest> allLeaves)
         {
             var options = new JsonSerializerOptions { WriteIndented = true };
             await using FileStream writeStream = File.Create(_filePath);
             await JsonSerializer.SerializeAsync(writeStream, allLeaves, options);
         }
+        #endregion
 
+        #endregion
         public void Dispose()
         {
             if (!_disposed)
